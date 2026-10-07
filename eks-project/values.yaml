@@ -1,0 +1,102 @@
+# Number of application Pods when autoscaling is disabled
+replicaCount: 1
+
+# Docker image configuration
+image:
+  repository: iyeredock3132/eks-app
+  pullPolicy: IfNotPresent
+  tag: "2.0"
+
+# Docker registry credentials
+# Empty because the Docker Hub repository is public
+imagePullSecrets: []
+
+# Optional Helm resource name overrides
+nameOverride: ""
+fullnameOverride: ""
+
+# Kubernetes ServiceAccount configuration
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+# Optional Pod metadata
+podAnnotations: {}
+podLabels: {}
+
+# Pod-level security configuration
+podSecurityContext: {}
+
+# Container-level security configuration
+securityContext: {}
+
+# Kubernetes Service configuration
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 5000
+
+# Ingress is not required because we are using
+# a LoadBalancer Service
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+# HTTPRoute is not being used in this project
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs: []
+  hostnames: []
+  rules: []
+
+# CPU and memory allocation for each application Pod
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+# Health checks
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+
+# Horizontal Pod Autoscaler
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+
+# Additional volumes are not currently required
+volumes: []
+
+# Additional volume mounts are not currently required
+volumeMounts: []
+
+# No specific Kubernetes node is required
+nodeSelector: {}
+
+# No node taints need to be tolerated
+tolerations: []
+
+# No Pod/node affinity rules are required
+affinity: {}
